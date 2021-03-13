@@ -4,6 +4,8 @@ import kakaopay.entity.*;
 import kakaopay.repository.ProductRepository;
 import kakaopay.repository.StockRedisRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,25 +50,40 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getInverstmentProduct(String started_at, String finished_at) throws  Exception {
+    public JSONArray get(String started_at, String finished_at) throws  Exception {
+
+        JSONArray jsonArray = new JSONArray();
+
         LocalDateTime from = LocalDateTime.parse(started_at, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         LocalDateTime to = LocalDateTime.parse(finished_at, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
         List<Product> products =  productRepository.findByStartedAtAfterAndFinishedAtBefore(from,to);
 
         for (Product product:
              products) {
+
+            JSONObject jsonObject = new JSONObject();
+
             Stock stock = product.getStock();
             Long pid = product.getId();
-
             Optional<RedisStock> getStock= this.stockRedisRepository.findById(pid.toString());
             if(getStock.isPresent()) {
                 RedisStock redisStock = getStock.get();
-                stock.setRemain(redisStock.getRemain());
+                stock.setRemain(stock.getTotal()-redisStock.getRemain());
                 stock.setInvestors(redisStock.getInvesters());
                 product.setStock(stock);
             }
+
+            jsonObject.put("product_id",pid);
+            jsonObject.put("title",product.getTitle());
+            jsonObject.put("total_investing_amount" , product.getStock().getTotal());
+            jsonObject.put("current_investing_amount",product.getStock().getRemain());
+            jsonObject.put("investers",product.getStock().getInvestors());
+            jsonObject.put("status", product.getStock().getRemain() >=  product.getStock().getTotal()  || LocalDateTime.now().isAfter(product.getFinishedAt()) ? "모집 완료" : "모집중");
+            jsonObject.put("duration", product.getStartedAt() + " ~ " + product.getFinishedAt());
+            jsonArray.add(jsonObject);
         }
-        return products;
+        return jsonArray;
     }
 
     private Stock toStock(final StockParameter stockParameter){

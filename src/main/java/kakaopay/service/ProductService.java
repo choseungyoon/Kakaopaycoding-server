@@ -2,8 +2,7 @@ package kakaopay.service;
 
 import kakaopay.entity.Product;
 import kakaopay.entity.ProductParameter;
-
-import java.util.List;
+import org.json.simple.JSONArray;
 
 public interface ProductService {
 
@@ -11,10 +10,6 @@ public interface ProductService {
     Product create(ProductParameter productParameter) throws Exception;
 
     //Read
-    List<Product> getInverstmentProduct(String started_at, String finished_at) throws  Exception;
-
-    //Update
-
-    //Delete
+    JSONArray get(String started_at, String finished_at) throws  Exception;
 
 }

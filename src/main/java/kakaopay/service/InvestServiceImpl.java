@@ -31,7 +31,6 @@ public class InvestServiceImpl implements InvestService {
     public Invest create(long X_USER_ID , InvestParamter investParamter) throws Exception{
 
         Long pid = investParamter.getProductId();
-
         Optional<RedisStock> getStock= this.stockRedisRepository.findById(pid.toString());
         Invest investObject = this.investRepository.findByProductIdAndUserId(investParamter.getProductId(),X_USER_ID);
 
