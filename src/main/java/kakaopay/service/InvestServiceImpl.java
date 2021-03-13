@@ -3,6 +3,7 @@ package kakaopay.service;
 import kakaopay.entity.Invest;
 import kakaopay.entity.InvestParamter;
 import kakaopay.entity.RedisStock;
+import kakaopay.error.exception.NotExistUserInvestException;
 import kakaopay.repository.InvestRepository;
 import kakaopay.repository.StockRedisRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,25 +28,25 @@ public class InvestServiceImpl implements InvestService {
 
     @Transactional
     @Override
-    public String create(long X_USER_ID , InvestParamter investParamter) throws Exception{
+    public Invest create(long X_USER_ID , InvestParamter investParamter) throws Exception{
 
         Long pid = investParamter.getProductId();
+
         Optional<RedisStock> getStock= this.stockRedisRepository.findById(pid.toString());
+        Invest investObject = this.investRepository.findByProductIdAndUserId(investParamter.getProductId(),X_USER_ID);
 
         if(getStock.isPresent()){
             RedisStock redisStock = getStock.get();
             if(redisStock.getRemain() >= investParamter.getInvestAmount()){
 
-
                 //Update user info
-                Invest investObject = this.investRepository.findByProductIdAndUserId(investParamter.getProductId(),X_USER_ID);
-
                 if(investObject == null){
                     investObject = new Invest();
                     investObject.setUserId(X_USER_ID);
                     investObject.setInvestAmount(investParamter.getInvestAmount());
                     investObject.setProductId(investParamter.getProductId());
                     investObject.setInvest_at(LocalDateTime.now());
+                    investObject.setResult("SUCCESS");
                     redisStock.setInvesters(redisStock.getInvesters()+1);
                 }
                 else{
@@ -56,11 +57,18 @@ public class InvestServiceImpl implements InvestService {
                 redisStock.setRemain(redisStock.getRemain()-investParamter.getInvestAmount());
                 this.stockRedisRepository.save(redisStock);
 
-                return this.investRepository.save(investObject).toString();
+                return this.investRepository.save(investObject);
 
             }
             else{
-                return "SOLD OUT";
+                investObject = new Invest();
+                investObject.setUserId(X_USER_ID);
+                investObject.setInvestAmount(investParamter.getInvestAmount());
+                investObject.setProductId(investParamter.getProductId());
+                investObject.setInvest_at(LocalDateTime.now());
+                investObject.setResult("SOLD OUT");
+
+                return investObject;
             }
         }
         else{
@@ -69,7 +77,12 @@ public class InvestServiceImpl implements InvestService {
     }
 
     @Override
-    public List<Invest> get(long xUserId) throws Exception{
+    public List<Invest> get(long xUserId) {
+        List<Invest> invests = this.investRepository.findByUserId(xUserId);
+
+        if(invests.size() == 0){
+            throw new NotExistUserInvestException("Not exist user invest with");
+        }
         return this.investRepository.findByUserId(xUserId);
     }
 }

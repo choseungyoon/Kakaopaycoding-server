@@ -24,4 +24,6 @@ public class Invest {
     private long investAmount;
 
     private LocalDateTime invest_at;
+
+    private String result;
 }
