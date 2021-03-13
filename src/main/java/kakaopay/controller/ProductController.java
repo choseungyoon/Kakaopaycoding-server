@@ -1,9 +1,9 @@
 package kakaopay.controller;
 
-import kakaopay.entity.InvestmentProductEntity;
-import kakaopay.service.InvestmentProductService;
+import kakaopay.entity.Product;
+import kakaopay.entity.ProductParameter;
+import kakaopay.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,21 +12,31 @@ import java.util.List;
 @Slf4j
 public class ProductController {
 
-	@Autowired
-	private InvestmentProductService investmentProductService;
+	private final ProductService productService;
 
-	@GetMapping("/product")
-	public List<InvestmentProductEntity> getProduct(
-			@RequestParam(value = "startedat") String started_at, @RequestParam(value = "finishedat") String finished_at) throws Exception {
-		log.debug("get investment product list");
-		return investmentProductService.getInverstmentProduct(started_at,finished_at);
+	public ProductController(ProductService productService){
+		this.productService = productService;
 	}
 
-	@PostMapping("/product")
-	public String insertInvestmentProduct(@RequestBody InvestmentProductEntity investmentProductEntity) throws  Exception{
-		log.debug("Insert product : Controller");
-		System.out.println(investmentProductEntity);
-		return investmentProductService.saveInvestmentProduct(investmentProductEntity);
+	@PostMapping("/products")
+	public Product create(@RequestBody ProductParameter productParameter) throws  Exception{
+		log.debug(productParameter.toString());
+		return productService.create(productParameter);
+	}
+
+	@GetMapping("/products")
+	public List<Product> get(@RequestParam(value = "startedat") String started_at, @RequestParam(value = "finishedat") String finished_at) throws Exception {
+		return productService.getInverstmentProduct(started_at,finished_at);
+	}
+
+	@PostMapping("/products/{id}")
+	public Product edit(@PathVariable Long id , @RequestBody Product product) throws Exception{
+		return null;
+	}
+
+	@DeleteMapping("/products/{id}")
+	public void delete(@PathVariable Long id){
+
 	}
 
 }
