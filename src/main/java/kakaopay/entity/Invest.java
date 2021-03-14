@@ -16,7 +16,7 @@ public class Invest {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "user_id")
+    @Column(name = "userId")
     private long userId;
 
     private long productId;
