@@ -9,7 +9,7 @@
 
 ### 상세 기술 구현 사항
 1. 전체 투자상품 조회 API
-* 상품 모집 기한 내의 상품만 응답합니다. 
+* 상품 모집 기한 내의 상품만 응답합니다. (현재 날짜 기준 모집기간에 포함된 상품만 반환합니다)
 
 2. 투자 하기 API
 * 다음의 요건을 만족하는 투자하기 API를 작성해주세요
@@ -25,7 +25,7 @@
 ## API Specifications
 | Action | API | Parameter | Body | Response | EXAMPLE | 
 |--------|-----|-----------|------|------------------| --------------- |
-|Get Product List | GET /api/v1/products?startedat={startedat}&finishedat={finishedat} | startedat = [LocalDateTIME] ,finishedat = [LocalDateTIME] | N/A | (JSONArray) 투자상품 리스트 | [{"duration":"2021-03-01T00:00 ~ 2021-05-30T00:00","total_investing_amount":100,"current_investing_amount":0,"product_id":1,"investers":0,"title":"해외 주식 포트폴리오","status":"모집중"}] |
+|Get Product List | GET /api/v1/products| N/A | N/A | (JSONArray) 투자상품 리스트 | [{"duration":"2021-03-01T00:00 ~ 2021-05-30T00:00","total_investing_amount":100,"current_investing_amount":100,"product_id":1,"investers":1,"title":"해외 주식 포트폴리오","status":"모집 완료"},{"duration":"2021-03-01T00:00 ~ 2021-05-30T00:00","total_investing_amount":100000,"current_investing_amount":1000,"product_id":2,"investers":1,"title":"해외 부동상 포트폴리오","status":"모집중"}] |
 | Invest | POST /api/v1/invest ,HTTP HEADER X_USER_ID : {id}|  N/A | { "productId" : {상품ID}, "investAmount" : {투자금액} } | (string) SUCCESS or SOLD OUT | {"result":"SUCCESS"} |
 | Get My Invest List | /api/v1/invest ,HTTP HEADER X_USER_ID : {id} | N/A | N/A | (JSONArray) 나의 투자 리스트 | [{"My_investing_amount":50,"productId":1,"Total_investing_amount":100,"title":"해외 주식 포트폴리오","InvestAt":"2021-03-14T21:11:34"},{"My_investing_amount":1000,"productId":2,"Total_investing_amount":100000,"title":"해외 부동상 포트폴리오","InvestAt":"2021-03-14T21:12:49"}] |
 
