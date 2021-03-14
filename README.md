@@ -49,4 +49,6 @@
     * 동시성 문제는 Redis를 통해 해소했습니다. 
     * Redis는 Single Thread로 동작하여 decrease/increase 명령의 순차적 처리를 보장합니다.
   
-   
+## Further More
+- [ ] Spring WebFlux 통한 비동기 방식
+- [ ] TCC 활용 REST API 분산 트랜잭션 구현
