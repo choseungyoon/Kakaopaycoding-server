@@ -42,41 +42,6 @@ public final class Stock {
         return stock;
     }
 
-    public final boolean invest(final long value){
-        if(this.remain < value) return false;
 
-        this.remain -= value;
-        this.investors +=1;
-        return true;
-    }
-
-    public final void increase(final long value){
-
-        final long nextTotal =total + value;
-        final long nextRemain = remain + value;
-        final int nextInvesters = investors + 1;
-
-        this.total = nextTotal;
-        this.remain = nextRemain;
-        this.investors = nextInvesters + 1;
-
-    }
-
-    public final void decrease(final long value){
-
-        final long nextTotal =total - value;
-        final long nextRemain = remain - value;
-        final int nextInvesters = investors - 1;
-
-
-        this.total = nextTotal;
-        this.remain = nextRemain;
-        this.investors = nextInvesters < 0 ? 0 : nextInvesters;
-
-    }
-
-    public final void syncCurrent(final long value) {
-        this.remain = value;
-    }
 
 }

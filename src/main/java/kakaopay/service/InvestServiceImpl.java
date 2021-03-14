@@ -3,7 +3,6 @@ package kakaopay.service;
 import kakaopay.entity.Invest;
 import kakaopay.entity.InvestParamter;
 import kakaopay.entity.RedisStock;
-import kakaopay.error.exception.NotExistUserInvestException;
 import kakaopay.repository.InvestRepository;
 import kakaopay.repository.StockRedisRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +42,6 @@ public class InvestServiceImpl implements InvestService {
         if(getStock.isPresent()){
             RedisStock redisStock = getStock.get();
             if(redisStock.getRemain() >= investParamter.getInvestAmount()){
-
                 //Update user info
                 if(investObject == null){
                     investObject = new Invest();
@@ -56,14 +54,12 @@ public class InvestServiceImpl implements InvestService {
                 else{
                     investObject.setInvestAmount(investObject.getInvestAmount() + investParamter.getInvestAmount());
                 }
-
                 //Update redis stock remain
                 redisStock.setRemain(redisStock.getRemain()-investParamter.getInvestAmount());
                 this.stockRedisRepository.save(redisStock);
                 this.investRepository.save(investObject);
                 jsonObject.put("result" , "SUCCESS");
                 return jsonObject;
-
             }
             else{
                 investObject = new Invest();
@@ -82,11 +78,8 @@ public class InvestServiceImpl implements InvestService {
 
     @Override
     public JSONArray get(long xUserId) {
-
         JSONArray jsonArray = new JSONArray();
-
         List<Invest> invests = this.investRepository.findByUserId(xUserId);
-
         for (Invest item:
              invests) {
             JSONObject jsonObject = new JSONObject();
@@ -99,11 +92,8 @@ public class InvestServiceImpl implements InvestService {
         }
 
         if(invests.size() == 0){
-            throw new NotExistUserInvestException("Not exist user invest with");
+            throw new RuntimeException("No Such User!");
         }
         return jsonArray;
     }
-
-
-
 }

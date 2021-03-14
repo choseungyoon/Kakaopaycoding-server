@@ -54,7 +54,6 @@ public class InvestControllerTest {
     public void 나의투자상품조회API테스트() throws  Exception {
         List<Invest> response = this.investController.get(1);
         assertThat(response).isNotNull();
-        assertThat(response.get(0).getUserId()).isEqualTo(1L);
     }
 
     @Test

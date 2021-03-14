@@ -4,6 +4,7 @@ import kakaopay.entity.Product;
 import kakaopay.entity.ProductParameter;
 import kakaopay.service.ProductService;
 import org.json.simple.JSONArray;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,14 +17,16 @@ public class ProductController {
 		this.productService = productService;
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/products")
 	public Product create(@RequestBody ProductParameter productParameter) throws  Exception{
 		return productService.create(productParameter);
 	}
 
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/products")
-	public JSONArray get(@RequestParam(value = "startedat", required = false) String started_at, @RequestParam(value = "finishedat",required = false) String finished_at) throws Exception {
-		return productService.get(started_at,finished_at);
+	public JSONArray get() throws Exception {
+		return productService.get();
 	}
 
 

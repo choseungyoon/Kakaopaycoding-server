@@ -23,7 +23,7 @@ public class InvestController {
         return investService.get(X_USER_ID);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/invest")
     public JSONObject create(@RequestHeader(value = "X_USER_ID") long X_USER_ID ,
                              @RequestBody InvestParamter investParamter) throws Exception{

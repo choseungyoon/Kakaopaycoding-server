@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,14 +48,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public JSONArray get(String started_at, String finished_at) throws  Exception {
+    public JSONArray get() {
 
         JSONArray jsonArray = new JSONArray();
 
-        LocalDateTime from = started_at == null ? LocalDateTime.now() : LocalDateTime.parse(started_at, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime to = finished_at == null ? LocalDateTime.now() :  LocalDateTime.parse(finished_at, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        List<Product> products =  productRepository.findByStartedAtBeforeAndFinishedAtAfter(LocalDateTime.now(),LocalDateTime.now());
 
-        List<Product> products =  productRepository.findByStartedAtBeforeAndFinishedAtAfter(from,to);
+        if(products.size() == 0){
+            throw new RuntimeException("No Such Product!");
+        }
 
         for (Product product:
              products) {

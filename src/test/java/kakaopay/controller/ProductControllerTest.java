@@ -8,9 +8,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -24,9 +21,7 @@ public class ProductControllerTest {
 
     @Test
     public void 전체투자상품조회API테스트() throws Exception{
-        String startedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
-        String finishedAt = LocalDateTime.now().plusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
-        JSONArray testProducts = this.productController.get(startedAt,finishedAt);
+        JSONArray testProducts = this.productController.get();
         assertThat(testProducts).isNotNull();
     }
 

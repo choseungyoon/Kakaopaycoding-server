@@ -10,6 +10,6 @@ public interface ProductService {
     Product create(ProductParameter productParameter) throws Exception;
 
     //Read
-    JSONArray get(String started_at, String finished_at) throws  Exception;
+    JSONArray get() throws  Exception;
 
 }
