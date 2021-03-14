@@ -1,13 +1,6 @@
 # 투자 REST API
 > **2021 kakaopay Server** : 카카오 페이 부동산/신용 투자 서비스 API
 
-## Getting Started
-#### Backend
-``` bash
-cd /kakaopay
-./gradlew bootRun -Dspring.profiles.active=dev
-```
-
 ## Technical Requitements
 ### 기본 요건
 * 전체 투자 상품 조회 , 투자하기 , 나의 투자상품 조회 API 구현합니다. (요청 식별값 : HTTP Header : X-USER-ID)
@@ -29,6 +22,13 @@ cd /kakaopay
   * 나의 투자상품 응답은 다음 내용을 포함합니다. 
     * 상품 ID, 상품 제목, 총 모집금액, 나의 투자금액, 투자일시
 
+## API Specifications
+| Action | API | Parameter | Body | Response | EXAMPLE | 
+|--------|-----|-----------|------|------------------| --------------- |
+|Get Product List | GET /api/v1/products?startedat={startedat}&finishedat={finishedat} | startedat = [LocalDateTIME] ,finishedat = [LocalDateTIME] | N/A | (JSONArray) 투자상품 리스트 | [{"duration":"2021-03-01T00:00 ~ 2021-05-30T00:00","total_investing_amount":100,"current_investing_amount":0,"product_id":1,"investers":0,"title":"해외 주식 포트폴리오","status":"모집중"}] |
+| Invest | POST /api/v1/invest ,HTTP HEADER X_USER_ID : {id}|  N/A | { "productId" : {상품ID}, "investAmount" : {투자금액} } | (string) SUCCESS or SOLD OUT | {"result":"SUCCESS"} |
+| Get My Invest List | /api/v1/invest ,HTTP HEADER X_USER_ID : {id} | N/A | N/A | (JSONArray) 나의 투자 리스트 | [{"My_investing_amount":50,"productId":1,"Total_investing_amount":100,"title":"해외 주식 포트폴리오","InvestAt":"2021-03-14T21:11:34"},{"My_investing_amount":1000,"productId":2,"Total_investing_amount":100000,"title":"해외 부동상 포트폴리오","InvestAt":"2021-03-14T21:12:49"}] |
+
 ## 문제 해결 전략
 ### System Architecture
 ![image](https://user-images.githubusercontent.com/16661906/111061607-99f1bb00-84e7-11eb-8108-3dcb005bc40c.png)
@@ -38,9 +38,7 @@ cd /kakaopay
   * 운영이 종료된 상품은 RDBMS에 저장하고 In-Memory DB를 Cleasnsing하여 가용 메모리를 유지합니다.
   * 상품의 투자금액 조회시, 실시간 모집금액 처리 영역에 부하를 주지 않아야 합니다.
   * 투자의 CRUD는 시간복잡도 O(1)을 만족해야 합니다. 
-  * 투자상품의 현재 모집금액 증가/감소의 동시성 이슈를 해소해야 합니다. 
-  * 대용량 트래픽 처리를 위해, 비동기 처리가 가능해야 합니다.
-  * 상품의 총 모집금액은 늘리거나 줄일 수 있어야 합니다. 
+  * 투자하기 시 모집금액 변동의 동시성 이슈를 해소해야 합니다. 
 
 * Solution
   * 전체 투자상품 조회 API /나의 투자상품 조회하기 API
