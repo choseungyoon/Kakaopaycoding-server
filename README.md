@@ -31,7 +31,7 @@
 
 ## 문제 해결 전략
 ### System Architecture
-![image](https://user-images.githubusercontent.com/16661906/111061607-99f1bb00-84e7-11eb-8108-3dcb005bc40c.png)
+![image](https://user-images.githubusercontent.com/16661906/111073347-ac88e600-8521-11eb-9e90-bffcfeb1413f.png)
 
 * KeyPoint
   * 투자금액의 설정과 모집금액의 처리는 분리되어야 합니다. 
