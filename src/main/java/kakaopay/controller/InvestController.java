@@ -4,13 +4,13 @@ import kakaopay.entity.Invest;
 import kakaopay.entity.InvestParamter;
 import kakaopay.service.InvestService;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Slf4j
 @RestController
+@RequestMapping("/api/v1")
 public class InvestController {
 
     private InvestService investService;
@@ -21,7 +21,7 @@ public class InvestController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/invest")
-    public List<Invest> get(@RequestHeader(value = "X_USER_ID") long X_USER_ID) throws Exception{
+    public JSONArray get(@RequestHeader(value = "X_USER_ID") long X_USER_ID) throws Exception{
         return investService.get(X_USER_ID);
     }
 

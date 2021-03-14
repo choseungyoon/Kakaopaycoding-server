@@ -3,12 +3,11 @@ package kakaopay.controller;
 import kakaopay.entity.Product;
 import kakaopay.entity.ProductParameter;
 import kakaopay.service.ProductService;
-import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Slf4j
+@RequestMapping("/api/v1")
 public class ProductController {
 
 	private final ProductService productService;
@@ -19,7 +18,6 @@ public class ProductController {
 
 	@PostMapping("/products")
 	public Product create(@RequestBody ProductParameter productParameter) throws  Exception{
-		log.debug(productParameter.toString());
 		return productService.create(productParameter);
 	}
 

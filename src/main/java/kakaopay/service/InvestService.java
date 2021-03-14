@@ -2,14 +2,13 @@ package kakaopay.service;
 
 import kakaopay.entity.Invest;
 import kakaopay.entity.InvestParamter;
-
-import java.util.List;
+import org.json.simple.JSONArray;
 
 public interface InvestService {
 
     public Invest create(long X_USER_ID , InvestParamter investParamter) throws Exception;
 
-    public List<Invest> get(long xUserId) throws Exception;
+    public JSONArray get(long xUserId) throws Exception;
 
 
 }

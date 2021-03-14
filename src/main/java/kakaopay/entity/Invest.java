@@ -26,4 +26,13 @@ public class Invest {
     private LocalDateTime invest_at;
 
     private String result;
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "productId", insertable = false,updatable = false)
+    private Product product;
+
+    public Product getProduct(){
+        return product;
+    }
+
 }

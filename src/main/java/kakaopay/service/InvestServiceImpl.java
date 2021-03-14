@@ -7,6 +7,8 @@ import kakaopay.error.exception.NotExistUserInvestException;
 import kakaopay.repository.InvestRepository;
 import kakaopay.repository.StockRedisRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,12 +78,29 @@ public class InvestServiceImpl implements InvestService {
     }
 
     @Override
-    public List<Invest> get(long xUserId) {
+    public JSONArray get(long xUserId) {
+
+        JSONArray jsonArray = new JSONArray();
+
         List<Invest> invests = this.investRepository.findByUserId(xUserId);
+
+        for (Invest item:
+             invests) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("productId" , item.getProductId());
+            jsonObject.put("title" , item.getProduct().getTitle());
+            jsonObject.put(("Total_investing_amount"), item.getProduct().getStock().getTotal());
+            jsonObject.put("My_investing_amount",item.getInvestAmount());
+            jsonObject.put("InvestAt",item.getInvest_at());
+            jsonArray.add(jsonObject);
+        }
 
         if(invests.size() == 0){
             throw new NotExistUserInvestException("Not exist user invest with");
         }
-        return this.investRepository.findByUserId(xUserId);
+        return jsonArray;
     }
+
+
+
 }
