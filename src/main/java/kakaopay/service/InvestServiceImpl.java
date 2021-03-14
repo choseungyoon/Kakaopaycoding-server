@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +33,6 @@ public class InvestServiceImpl implements InvestService {
     public JSONObject create(long X_USER_ID , InvestParamter investParamter) throws Exception{
 
         JSONObject jsonObject = new JSONObject();
-
         Long pid = investParamter.getProductId();
         Optional<RedisStock> getStock= this.stockRedisRepository.findById(pid.toString());
         Invest investObject = this.investRepository.findByProductIdAndUserId(investParamter.getProductId(),X_USER_ID);
@@ -42,18 +40,16 @@ public class InvestServiceImpl implements InvestService {
         if(getStock.isPresent()){
             RedisStock redisStock = getStock.get();
             if(redisStock.getRemain() >= investParamter.getInvestAmount()){
+
                 //Update user info
                 if(investObject == null){
-                    investObject = new Invest();
-                    investObject.setUserId(X_USER_ID);
-                    investObject.setInvestAmount(investParamter.getInvestAmount());
-                    investObject.setProductId(investParamter.getProductId());
-                    investObject.setInvest_at(LocalDateTime.now());
+                    investObject = new Invest(X_USER_ID,investParamter.getInvestAmount(),investParamter.getProductId());
                     redisStock.setInvesters(redisStock.getInvesters()+1);
                 }
                 else{
                     investObject.setInvestAmount(investObject.getInvestAmount() + investParamter.getInvestAmount());
                 }
+
                 //Update redis stock remain
                 redisStock.setRemain(redisStock.getRemain()-investParamter.getInvestAmount());
                 this.stockRedisRepository.save(redisStock);
@@ -62,17 +58,13 @@ public class InvestServiceImpl implements InvestService {
                 return jsonObject;
             }
             else{
-                investObject = new Invest();
-                investObject.setUserId(X_USER_ID);
-                investObject.setInvestAmount(investParamter.getInvestAmount());
-                investObject.setProductId(investParamter.getProductId());
-                investObject.setInvest_at(LocalDateTime.now());
                 jsonObject.put("result" , "SOLD OUT");
                 return jsonObject;
             }
         }
         else{
-            return null;
+            jsonObject.put("result" , "Product is not exist!");
+            return jsonObject;
         }
     }
 
