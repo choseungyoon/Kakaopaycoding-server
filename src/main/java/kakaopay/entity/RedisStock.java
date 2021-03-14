@@ -26,4 +26,12 @@ public class RedisStock {
         return true;
     }
 
+    public boolean decrease(final long value){
+        if(this.remain < value) return false;
+        else{
+            this.remain -= value;
+            return true;
+        }
+    }
+
 }

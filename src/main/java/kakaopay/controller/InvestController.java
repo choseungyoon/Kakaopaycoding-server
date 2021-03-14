@@ -1,9 +1,9 @@
 package kakaopay.controller;
 
-import kakaopay.entity.Invest;
 import kakaopay.entity.InvestParamter;
 import kakaopay.service.InvestService;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +25,8 @@ public class InvestController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/invest")
-    public Invest create(@RequestHeader(value = "X_USER_ID") long X_USER_ID ,
-                            @RequestBody InvestParamter investParamter) throws Exception{
+    public JSONObject create(@RequestHeader(value = "X_USER_ID") long X_USER_ID ,
+                             @RequestBody InvestParamter investParamter) throws Exception{
         return investService.create(X_USER_ID,investParamter);
     }
 }

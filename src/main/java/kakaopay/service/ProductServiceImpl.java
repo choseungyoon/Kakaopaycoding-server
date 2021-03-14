@@ -31,7 +31,6 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public Product create(ProductParameter productParameter) throws Exception{
-
         Product newProduct = Product.of(
                 productParameter.getTitle(),
                 toStock(productParameter.getStock()),
@@ -54,19 +53,19 @@ public class ProductServiceImpl implements ProductService {
 
         JSONArray jsonArray = new JSONArray();
 
-        LocalDateTime from = LocalDateTime.parse(started_at, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime to = LocalDateTime.parse(finished_at, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime from = started_at == null ? LocalDateTime.now() : LocalDateTime.parse(started_at, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime to = finished_at == null ? LocalDateTime.now() :  LocalDateTime.parse(finished_at, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        List<Product> products =  productRepository.findByStartedAtAfterAndFinishedAtBefore(from,to);
+        List<Product> products =  productRepository.findByStartedAtBeforeAndFinishedAtAfter(from,to);
 
         for (Product product:
              products) {
 
             JSONObject jsonObject = new JSONObject();
-
             Stock stock = product.getStock();
             Long pid = product.getId();
             Optional<RedisStock> getStock= this.stockRedisRepository.findById(pid.toString());
+
             if(getStock.isPresent()) {
                 RedisStock redisStock = getStock.get();
                 stock.setRemain(stock.getTotal()-redisStock.getRemain());
@@ -83,7 +82,9 @@ public class ProductServiceImpl implements ProductService {
             jsonObject.put("duration", product.getStartedAt() + " ~ " + product.getFinishedAt());
             jsonArray.add(jsonObject);
         }
+
         return jsonArray;
+
     }
 
     private Stock toStock(final StockParameter stockParameter){

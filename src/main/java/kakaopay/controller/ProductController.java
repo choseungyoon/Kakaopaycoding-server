@@ -22,7 +22,7 @@ public class ProductController {
 	}
 
 	@GetMapping("/products")
-	public JSONArray get(@RequestParam(value = "startedat") String started_at, @RequestParam(value = "finishedat") String finished_at) throws Exception {
+	public JSONArray get(@RequestParam(value = "startedat", required = false) String started_at, @RequestParam(value = "finishedat",required = false) String finished_at) throws Exception {
 		return productService.get(started_at,finished_at);
 	}
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductRepository extends CrudRepository<Product, Integer> {
 
-    List<Product> findByStartedAtAfterAndFinishedAtBefore(LocalDateTime started_at, LocalDateTime finished_at);
+    List<Product> findByStartedAtBeforeAndFinishedAtAfter(LocalDateTime form,LocalDateTime to);
 
     Product findById(long Id);
 

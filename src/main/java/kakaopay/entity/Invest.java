@@ -35,4 +35,11 @@ public class Invest {
         return product;
     }
 
+    public Invest(final long userId, final long productId, final  long investAmount, final String result){
+        this.userId = userId;
+        this.investAmount = investAmount;
+        this.productId = productId;
+        this.invest_at = LocalDateTime.now();
+        this.result = result;
+    }
 }

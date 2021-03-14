@@ -2,6 +2,7 @@ package kakaopay.controller;
 
 import kakaopay.entity.*;
 import kakaopay.service.ProductService;
+import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,10 +64,10 @@ public class InvestControllerTest {
         testInvest.setProductId(this.testProductId);
         testInvest.setInvestAmount(this.testProductAmount);
 
-        Invest response = this.investController.create(10,testInvest);
+        JSONObject response = this.investController.create(10,testInvest);
 
         assertThat(response).isNotNull();
-        assertThat(response.getResult()).isEqualTo("SUCCESS");
+        assertThat(response.get("result")).isEqualTo("SUCCESS");
     }
 
     @Test
@@ -76,10 +77,10 @@ public class InvestControllerTest {
         testInvest.setProductId(this.testProductId);
         testInvest.setInvestAmount(this.testProductAmount + 1);
 
-        Invest response = this.investController.create(10,testInvest);
+        JSONObject response = this.investController.create(10,testInvest);
 
         //assertThat(response).isNotNull();
-        assertThat(response.getResult()).isEqualTo("SOLD OUT");
+        assertThat(response.get("result")).isEqualTo("SOLD OUT");
 
     }
 
